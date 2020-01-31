@@ -10,6 +10,7 @@
 #include <xcb/xcb_ewmh.h>
 #include <xcb/xcb_aux.h>
 #include <xcb/xtest.h>
+#include <xcb/xproto.h>
 #include "helpers.h"
 #include "xdo.h"
 
@@ -33,6 +34,8 @@ int main(int argc, char *argv[])
 		action = window_show;
 	} else if (strcmp(argv[1], "move") == 0) {
 		action = window_move;
+	} else if (strcmp(argv[1], "toggle") == 0) {
+		action = window_toggle;
 	} else if (strcmp(argv[1], "resize") == 0) {
 		action = window_resize;
 	} else if (strcmp(argv[1], "close") == 0) {
@@ -381,6 +384,15 @@ void window_hide(xcb_window_t win)
 void window_show(xcb_window_t win)
 {
 	xcb_map_window(dpy, win);
+}
+
+void window_toggle(xcb_window_t win)
+{
+	xcb_get_window_attributes_reply_t *wa = xcb_get_window_attributes_reply(dpy, xcb_get_window_attributes(dpy, win), NULL);
+	if (wa != NULL) {
+		if (wa->map_state == XCB_MAP_STATE_UNMAPPED) window_show(win);
+		else if (wa->map_state == XCB_MAP_STATE_VIEWABLE) window_hide(win);
+	}
 }
 
 void window_raise(xcb_window_t win)

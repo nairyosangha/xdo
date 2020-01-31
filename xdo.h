@@ -57,6 +57,7 @@ void window_close(xcb_window_t win);
 void window_kill(xcb_window_t win);
 void window_hide(xcb_window_t win);
 void window_show(xcb_window_t win);
+void window_toggle(xcb_window_t win);
 void window_raise(xcb_window_t win);
 void window_lower(xcb_window_t win);
 void window_stack(xcb_window_t win, uint32_t mode);
